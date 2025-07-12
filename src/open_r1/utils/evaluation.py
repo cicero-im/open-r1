@@ -2,6 +2,7 @@ import subprocess
 from typing import TYPE_CHECKING, Dict, Union
 
 from .hub import get_gpu_count_for_vllm, get_param_count_from_repo_id
+from security import safe_command
 
 
 if TYPE_CHECKING:
@@ -85,7 +86,7 @@ def run_lighteval_job(
     if training_args.system_prompt is not None:
         cmd_args.append(f"--system_prompt={training_args.system_prompt}")
     cmd[-1] += " " + " ".join(cmd_args)
-    subprocess.run(cmd, check=True)
+    safe_command.run(subprocess.run, cmd, check=True)
 
 
 def run_benchmark_jobs(training_args: Union["SFTConfig", "GRPOConfig"], model_args: "ModelConfig") -> None:
