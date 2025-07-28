@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from random import randint
 
 import numpy as np
 
 from .base_config import BaseConfig
+import secrets
 
 
 MAX_INT = np.iinfo(np.int64).max
@@ -24,7 +24,7 @@ class BaseTask(ABC):
 
         # We generate individual sample rngs using seed + idx, so we scramble the seeds to large ints first
         # to avoid sample overlap between datasets using common similar, small seeds (like 0 and 42 and 123)
-        self.seed = self.config.seed or randint(0, MAX_INT)
+        self.seed = self.config.seed or secrets.SystemRandom().randint(0, MAX_INT)
         seed_scrambler = np.random.default_rng(self.seed)
         self.scrambled_seed = seed_scrambler.integers(low=0, high=MAX_INT, size=None)
 
